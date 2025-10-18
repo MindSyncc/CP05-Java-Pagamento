@@ -31,10 +31,9 @@ public class Pagamento {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataPagamento;
 
-    public Pagamento(Long id, String formaPagamento, String status, double valor, int parcelas, double troco, Date dataPagamento) {
+    public Pagamento(Long id, String formaPagamento, double valor, int parcelas, double troco, Date dataPagamento) {
         this.id = id;
         this.formaPagamento = FormaPagamento.encontrarFormaDePagamento(formaPagamento);
-        this.status = StatusPagamento.encontrarStatusDePagamento(status);
         this.valor = valor;
         this.parcelas = parcelas;
         this.troco = troco;
@@ -57,11 +56,11 @@ public class Pagamento {
         this.valor = valor;
     }
 
-    public FormaPagamento getFormaPagamento() {
+    public FormaPagamento getFormaDePagamento() {
         return formaPagamento;
     }
 
-    public void setFormaPagamento(FormaPagamento formaPagamento) {
+    public void setFormaDePagamento(FormaPagamento formaPagamento) {
         this.formaPagamento = formaPagamento;
     }
 

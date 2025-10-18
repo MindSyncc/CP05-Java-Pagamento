@@ -9,19 +9,19 @@ public enum StatusPagamento {
     RECUSADO("RECUSADO"),
     CANCELADO("CANCELADO");
 
-    private String status;
+    private String statusPagamento;
 
-    StatusPagamento(String status) {
-        this.status = status;
+    StatusPagamento(String statusPagamento) {
+        this.statusPagamento = statusPagamento;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusPagamento() {
+        return statusPagamento;
     }
 
     public static StatusPagamento encontrarStatusDePagamento(String statusPagamento) {
         Optional<StatusPagamento> statusPagamentoOptional = Arrays.stream(StatusPagamento.values())
-                .filter(s -> s.getStatus().equalsIgnoreCase(statusPagamento))
+                .filter(s -> s.getStatusPagamento().equalsIgnoreCase(statusPagamento))
                 .findFirst();
 
         if (statusPagamentoOptional.isPresent()) {
