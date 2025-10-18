@@ -3,23 +3,13 @@ package br.com.restaurante.www.pagamento.entities;
 import java.time.LocalDate;
 
 public class Pagamento {
-    // Constantes de formas de pagamento
-    public static final String FORMA_CREDITO = "CREDITO";
-    public static final String FORMA_DEBITO = "DEBITO";
-    public static final String FORMA_PIX = "PIX";
-    public static final String FORMA_DINHEIRO = "DINHEIRO";
-
-    // Constantes de status
-    public static final String STATUS_APROVADO = "APROVADO";
-    public static final String STATUS_PENDENTE = "PENDENTE";
-    public static final String STATUS_RECUSADO = "RECUSADO";
-    public static final String STATUS_CANCELADO = "CANCELADO";
-
     // Atributos
     private int id; // id_pagamento
+
+    private FormaPagamento formaPagamento;
+    private StatusPagamento status;
+
     private double valor;
-    private String formaPagamento;
-    private String status;
     private LocalDate dataPagamento;
     private int parcelas;   // usado apenas em crédito
     private double troco;   // usado apenas em dinheiro
@@ -40,19 +30,19 @@ public class Pagamento {
         this.valor = valor;
     }
 
-    public String getFormaPagamento() {
+    public FormaPagamento getFormaPagamento() {
         return formaPagamento;
     }
 
-    public void setFormaPagamento(String formaPagamento) {
+    public void setFormaPagamento(FormaPagamento formaPagamento) {
         this.formaPagamento = formaPagamento;
     }
 
-    public String getStatus() {
+    public StatusPagamento getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusPagamento status) {
         this.status = status;
     }
 

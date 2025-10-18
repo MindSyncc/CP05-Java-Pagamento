@@ -1,14 +1,28 @@
 package br.com.restaurante.www.pagamento.entities;
 
-// Tabela Cartao
-public class Cartao {
-    private Long id;
-    private String numeroCartao;
-    private String nomeTitular;
-    private String validade;
-    private String cvv;
-    private String senha;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "cartoes")
+public class Cartao {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "NUMERO")
+    private String numeroCartao;
+
+    @Column(name = "TITULAR")
+    private String nomeTitular;
+
+    @Column(name = "VALIDADE")
+    private String validade;
+
+    @Column(name = "CVV")
+    private String cvv;
+
+    @Column(name = "SENHA")
+    private String senha;
 
     public Long getId() {
         return id;
