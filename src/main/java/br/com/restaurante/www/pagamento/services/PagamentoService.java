@@ -1,5 +1,6 @@
 package br.com.restaurante.www.pagamento.services;
 
+import br.com.restaurante.www.pagamento.config.PagamentoException;
 import br.com.restaurante.www.pagamento.entities.Pagamento;
 import br.com.restaurante.www.pagamento.entities.StatusPagamento;
 import br.com.restaurante.www.pagamento.repositories.PagamentoRepository;
@@ -13,34 +14,34 @@ public class PagamentoService {
     @Autowired
     private PagamentoRepository repository;
 
-    public void registrarPagamento(Pagamento pagamento) {
+    public void registrarPagamento(Pagamento pagamento) throws PagamentoException{
         if (pagamento.getValor() <= 0) {
-            System.out.println("Exceção");
+            throw new PagamentoException("Valor inválido para pagamento!");
         }
 
         if (pagamento.getFormaDePagamento() == null) {
-            System.out.println("Exceção");
+            throw new PagamentoException("Forma de pagamento inválida");
         }
 
         switch (pagamento.getFormaDePagamento().getFormaPagamento()) {
             case "DINHEIRO":
                 if (pagamento.getTroco() < 0) {
-                    System.out.println("Exceção");
+                    throw new PagamentoException("Troco não pode ser negativo!");
                 }
                 break;
             case "CREDITO":
                 if (pagamento.getParcelas() <= 0) {
-                    System.out.println("Exceção");
+                    throw new PagamentoException("Número de parcelas informado deve ser maior que zero!");
                 }
                 break;
 
             case "DEBITO":
             case "PIX":
                 if (pagamento.getTroco() > 0) {
-                    System.out.println("Exceção");
+                    throw new PagamentoException("Troco não é permitido para esta forma de pagamento!");
                 }
                 if (pagamento.getParcelas() > 0) {
-                    System.out.println("Exceção");
+                    throw new PagamentoException("Parcelas não são permitidas para esta forma de pagamento!");
                 }
                 break;
         }
@@ -69,11 +70,11 @@ public class PagamentoService {
         System.out.println("Pagamento não encontrado!");
     }
 
-    public void cancelarPagamento(Long id) {
+    public void cancelarPagamento(Long id) throws PagamentoException{
         Optional<Pagamento> pagamentoOptional = repository.findById(id);
 
         if (pagamentoOptional.isEmpty()) {
-            System.out.println("Pagamento não encontrado!");
+            throw new PagamentoException("Pagamento não encontrado!");
         }
 
         Pagamento pagamentoEncontrado = pagamentoOptional.get();
@@ -81,11 +82,11 @@ public class PagamentoService {
         String statusPagamentoEncontrado = pagamentoEncontrado.getStatus().getStatusPagamento();
 
         if (!formaPagamentoEncontrado.equalsIgnoreCase("CREDITO") && !formaPagamentoEncontrado.equalsIgnoreCase("DEBITO")) {
-            System.out.println("Exceção");
+            throw new PagamentoException("Somente pagamentos com CREDITO ou DEBITO podem ser cancelados!");
         }
 
         if (statusPagamentoEncontrado.equalsIgnoreCase("CANCELADO")) {
-            System.out.println("Exceção");
+            throw new PagamentoException("Este pagamento já foi cancelado!");
         }
 
         pagamentoEncontrado.setStatus(StatusPagamento.encontrarStatusDePagamento("CANCELADO"));
