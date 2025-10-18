@@ -1,24 +1,51 @@
 package br.com.restaurante.www.pagamento.entities;
 
-import java.time.LocalDate;
+import jakarta.persistence.*;
 
+import java.util.Date;
+
+@Entity
+@Table(name = "Pagamentos")
 public class Pagamento {
-    // Atributos
-    private int id; // id_pagamento
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_PAGAMENTO")
+    private Long id;
 
+    @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
+
+    @Enumerated(EnumType.STRING)
     private StatusPagamento status;
 
+    @Column(name = "VALOR")
     private double valor;
-    private LocalDate dataPagamento;
+
+    @Column(name = "PARCELAS")
     private int parcelas;   // usado apenas em crédito
+
+    @Column(name = "TROCO")
     private double troco;   // usado apenas em dinheiro
 
-    public int getId() {
+    @Column(name = "DATA_PAGAMENTO")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dataPagamento;
+
+    public Pagamento(Long id, String formaPagamento, String status, double valor, int parcelas, double troco, Date dataPagamento) {
+        this.id = id;
+        this.formaPagamento = FormaPagamento.encontrarFormaDePagamento(formaPagamento);
+        this.status = StatusPagamento.encontrarStatusDePagamento(status);
+        this.valor = valor;
+        this.parcelas = parcelas;
+        this.troco = troco;
+        this.dataPagamento = dataPagamento;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -46,11 +73,11 @@ public class Pagamento {
         this.status = status;
     }
 
-    public LocalDate getDataPagamento() {
+    public Date getDataPagamento() {
         return dataPagamento;
     }
 
-    public void setDataPagamento(LocalDate dataPagamento) {
+    public void setDataPagamento(Date dataPagamento) {
         this.dataPagamento = dataPagamento;
     }
 

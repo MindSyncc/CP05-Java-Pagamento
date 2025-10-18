@@ -3,10 +3,11 @@ package br.com.restaurante.www.pagamento.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cartoes")
+@Table(name = "Cartoes")
 public class Cartao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_CARTAO")
     private Long id;
 
     @Column(name = "NUMERO")
@@ -23,6 +24,15 @@ public class Cartao {
 
     @Column(name = "SENHA")
     private String senha;
+
+    public Cartao(Long id, String numeroCartao, String nomeTitular, String validade, String cvv, String senha) {
+        this.id = id;
+        this.numeroCartao = numeroCartao;
+        this.nomeTitular = nomeTitular;
+        this.validade = validade;
+        this.cvv = cvv;
+        this.senha = senha;
+    }
 
     public Long getId() {
         return id;
