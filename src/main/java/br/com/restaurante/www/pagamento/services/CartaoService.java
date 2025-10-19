@@ -22,7 +22,7 @@ public class CartaoService {
             throw new CartaoException("É necessário informar o nome do titular");
         } else if (cartao.getValidade().isEmpty()) {
             throw new CartaoException("É necessário informar a validade do cartão");
-        } else if (cartao.getCvv().length() != 3 || cartao.getCvv().length() != 4) {
+        } else if (cartao.getCvv().length() != 3 && cartao.getCvv().length() != 4) {
             throw new CartaoException("O código de segurança informado não está de acordo com os padrões");
         } else if (cartao.getSenha().length() != 6) {
             throw new CartaoException("O cartão precisa conter uma senha de 6 dígitos");
