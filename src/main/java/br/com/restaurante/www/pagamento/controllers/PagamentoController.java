@@ -3,6 +3,7 @@ package br.com.restaurante.www.pagamento.controllers;
 import br.com.restaurante.www.pagamento.config.PagamentoException;
 import br.com.restaurante.www.pagamento.entities.Pagamento;
 import br.com.restaurante.www.pagamento.services.PagamentoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class PagamentoController {
     }
 
     @PostMapping
-    public void salvarPagamento(@RequestBody Pagamento pagamento) {
+    public void salvarPagamento(@RequestBody @Valid Pagamento pagamento) {
         try {
             System.out.println(pagamento);
             pagamentoService.registrarPagamento(pagamento);

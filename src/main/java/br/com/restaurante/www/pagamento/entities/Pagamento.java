@@ -1,6 +1,7 @@
 package br.com.restaurante.www.pagamento.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import java.util.Date;
 
@@ -12,21 +13,26 @@ public class Pagamento {
     @Column(name = "ID_PAGAMENTO")
     private Long id;
 
+    @NotBlank(message = "O campo formaPagamanto é obrigatório")
+    @Size(max = 50, message = "A forma de pagamanto deve ter no máximo 50 caracteres")
     @Column(name = "FORMA_DE_PAGAMENTO")
     private String formaPagamento;
 
     @Column(name = "STATUS")
     private String status;
 
+    @NotNull(message = "O campo valor é obrigatório")
+    @DecimalMin(value = "0.1", message = "O campo preço não pode ser zero.")
     @Column(name = "VALOR")
-    private double valor;
+    private Double valor;
 
     @Column(name = "PARCELAS")
     private int parcelas;   // usado apenas em crédito
 
     @Column(name = "TROCO")
-    private double troco;   // usado apenas em dinheiro
+    private Double troco;   // usado apenas em dinheiro
 
+    @PastOrPresent(message = "O campo dataPagamento é obrigatório")
     @Column(name = "DATA_PAGAMENTO")
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataPagamento;
@@ -93,7 +99,7 @@ public class Pagamento {
     }
 
     public double getTroco() {
-        return troco;
+        return troco != null? troco : 0.0;
     }
 
     public void setTroco(double troco) {
