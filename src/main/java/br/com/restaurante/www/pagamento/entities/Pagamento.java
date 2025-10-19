@@ -12,11 +12,11 @@ public class Pagamento {
     @Column(name = "ID_PAGAMENTO")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private FormaPagamento formaPagamento;
+    @Column(name = "FORMA_DE_PAGAMENTO")
+    private String formaPagamento;
 
-    @Enumerated(EnumType.STRING)
-    private StatusPagamento status;
+    @Column(name = "STATUS")
+    private String status;
 
     @Column(name = "VALOR")
     private double valor;
@@ -31,9 +31,13 @@ public class Pagamento {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataPagamento;
 
+    public Pagamento() {
+
+    }
+
     public Pagamento(Long id, String formaPagamento, double valor, int parcelas, double troco, Date dataPagamento) {
         this.id = id;
-        this.formaPagamento = FormaPagamento.encontrarFormaDePagamento(formaPagamento);
+        this.formaPagamento = formaPagamento;
         this.valor = valor;
         this.parcelas = parcelas;
         this.troco = troco;
@@ -56,19 +60,19 @@ public class Pagamento {
         this.valor = valor;
     }
 
-    public FormaPagamento getFormaDePagamento() {
+    public String getFormaPagamento() {
         return formaPagamento;
     }
 
-    public void setFormaDePagamento(FormaPagamento formaPagamento) {
+    public void setFormaPagamento(String formaPagamento) {
         this.formaPagamento = formaPagamento;
     }
 
-    public StatusPagamento getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(StatusPagamento status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -94,5 +98,18 @@ public class Pagamento {
 
     public void setTroco(double troco) {
         this.troco = troco;
+    }
+
+    @Override
+    public String toString() {
+        return "Pagamento{" +
+                "id=" + id +
+                ", formaPagamento=" + formaPagamento +
+                ", status=" + status +
+                ", valor=" + valor +
+                ", parcelas=" + parcelas +
+                ", troco=" + troco +
+                ", dataPagamento=" + dataPagamento +
+                '}';
     }
 }

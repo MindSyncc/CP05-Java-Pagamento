@@ -25,6 +25,10 @@ public class Cartao {
     @Column(name = "SENHA")
     private String senha;
 
+    public Cartao() {
+
+    }
+
     public Cartao(Long id, String numeroCartao, String nomeTitular, String validade, String cvv, String senha) {
         this.id = id;
         this.numeroCartao = numeroCartao;

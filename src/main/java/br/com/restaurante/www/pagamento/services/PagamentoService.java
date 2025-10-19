@@ -14,16 +14,20 @@ public class PagamentoService {
     @Autowired
     private PagamentoRepository repository;
 
-    public void registrarPagamento(Pagamento pagamento) throws PagamentoException{
+    public Pagamento validar(Pagamento pagamento) throws PagamentoException {
         if (pagamento.getValor() <= 0) {
             throw new PagamentoException("Valor inválido para pagamento!");
         }
 
-        if (pagamento.getFormaDePagamento() == null) {
-            throw new PagamentoException("Forma de pagamento inválida");
+        System.out.println(pagamento.getFormaPagamento());
+
+        if (pagamento.getFormaPagamento() == null || pagamento.getFormaPagamento().isEmpty()) {
+            throw new PagamentoException("Forma de pagamento inválida ou não informada");
         }
 
-        switch (pagamento.getFormaDePagamento().getFormaPagamento()) {
+        String forma = pagamento.getFormaPagamento().toUpperCase();
+
+        switch (forma) {
             case "DINHEIRO":
                 if (pagamento.getTroco() < 0) {
                     throw new PagamentoException("Troco não pode ser negativo!");
@@ -44,30 +48,35 @@ public class PagamentoService {
                     throw new PagamentoException("Parcelas não são permitidas para esta forma de pagamento!");
                 }
                 break;
+            default:
+                throw new PagamentoException("Forma de pagamento não suportada!");
         }
 
-        // Define status como APROVADO por padrão
-        pagamento.setStatus(StatusPagamento.encontrarStatusDePagamento("Aprovado"));
+        return pagamento;
+    }
 
-        repository.save(pagamento);
+    public void registrarPagamento(Pagamento pagamento) throws PagamentoException{
+        Pagamento pagamentoValidado = validar(pagamento);
+
+        // Define status como APROVADO por padrão
+        pagamentoValidado.setStatus("APROVADO");
+
+        repository.save(pagamentoValidado);
     }
 
     public List<Pagamento> listarPagamentos() {
         return repository.findAll();
     }
 
-    public List<Pagamento> buscarPagamentoPorTitular(String nome) {
-        return repository.findByTitular(nome);
-    }
-
-    public void atualizarPagamento(Long id) {
+    public void atualizarPagamento(Long id, Pagamento pagamentoAtualizado) throws PagamentoException{
         Optional<Pagamento> pagamentoOptional = repository.findById(id);
 
-        if (pagamentoOptional.isPresent()) {
-            repository.save(pagamentoOptional.get());
+        if (pagamentoOptional.isEmpty()) {
+            throw new PagamentoException("Pagamento não encontrado!");
         }
-
-        System.out.println("Pagamento não encontrado!");
+        pagamentoAtualizado.setId(id);
+        // Reutilização do método para revalidar regras de negócio
+        registrarPagamento(pagamentoAtualizado);
     }
 
     public void cancelarPagamento(Long id) throws PagamentoException{
@@ -78,8 +87,8 @@ public class PagamentoService {
         }
 
         Pagamento pagamentoEncontrado = pagamentoOptional.get();
-        String formaPagamentoEncontrado = pagamentoEncontrado.getFormaDePagamento().getFormaPagamento();
-        String statusPagamentoEncontrado = pagamentoEncontrado.getStatus().getStatusPagamento();
+        String formaPagamentoEncontrado = pagamentoEncontrado.getFormaPagamento();
+        String statusPagamentoEncontrado = pagamentoEncontrado.getStatus();
 
         if (!formaPagamentoEncontrado.equalsIgnoreCase("CREDITO") && !formaPagamentoEncontrado.equalsIgnoreCase("DEBITO")) {
             throw new PagamentoException("Somente pagamentos com CREDITO ou DEBITO podem ser cancelados!");
@@ -89,7 +98,23 @@ public class PagamentoService {
             throw new PagamentoException("Este pagamento já foi cancelado!");
         }
 
-        pagamentoEncontrado.setStatus(StatusPagamento.encontrarStatusDePagamento("CANCELADO"));
-        atualizarPagamento(pagamentoEncontrado.getId());
+        validar(pagamentoEncontrado);
+
+        pagamentoEncontrado.setStatus("CANCELADO");
+        System.out.println(pagamentoEncontrado);
+
+        // Reutilização do método para revalidar regras de negócio
+        repository.save(pagamentoEncontrado);
+    }
+
+    public void removerPagamento(Long id) throws PagamentoException{
+        Optional<Pagamento> pagamentoOptional = repository.findById(id);
+
+        if (pagamentoOptional.isEmpty()) {
+            throw new PagamentoException("Pagamento não encontrado!");
+        }
+
+        Pagamento pagamentoEncontrado = pagamentoOptional.get();
+        repository.delete(pagamentoEncontrado);
     }
 }
