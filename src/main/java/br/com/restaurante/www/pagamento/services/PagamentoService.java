@@ -2,7 +2,6 @@ package br.com.restaurante.www.pagamento.services;
 
 import br.com.restaurante.www.pagamento.config.PagamentoException;
 import br.com.restaurante.www.pagamento.entities.Pagamento;
-import br.com.restaurante.www.pagamento.entities.StatusPagamento;
 import br.com.restaurante.www.pagamento.repositories.PagamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
