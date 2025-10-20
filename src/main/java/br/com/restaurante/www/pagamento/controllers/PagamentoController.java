@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/pagamentos")
@@ -55,5 +56,10 @@ public class PagamentoController {
         } catch (PagamentoException e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @GetMapping("/total")
+    public Map<String, Double> exibirTotalDoDia() {
+        return pagamentoService.calcularTotalDoDia();
     }
 }

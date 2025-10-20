@@ -6,7 +6,11 @@ import br.com.restaurante.www.pagamento.repositories.CartaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -60,5 +64,35 @@ public class CartaoService {
 
         Cartao cartaoEncontrado = cartaoOptional.get();
         repository.delete(cartaoEncontrado);
+    }
+
+    // Talvez possamos, em uma implementação futura, atrelar essa validação ao processo de registro do cartão
+    public Map<String, Object> verificarValidade(Long id) throws CartaoException {
+        Optional<Cartao> cartaoOptional = repository.findById(id);
+
+        if (cartaoOptional.isEmpty()) {
+            throw new CartaoException("Não foi possível encontrar o cartão");
+        }
+
+        Cartao cartaoEncontrado = cartaoOptional.get();
+        String dataValidadeCartao = cartaoEncontrado.getValidade(); // 09-28
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yy");
+        YearMonth validade = YearMonth.parse(dataValidadeCartao, formatter);
+        YearMonth atual = YearMonth.now();
+
+        if (atual.isAfter(validade)) {
+            return Map.of(
+                    "status", "expirado",
+                    "mensagem", "O cartão está expirado. Tente utilizar outro cartão",
+                    "cartaoId", id
+            );
+        }
+
+        return Map.of(
+                "status", "valido",
+                "mensagem", "O cartão ainda está dentro da validade",
+                "cartaoId", id
+        );
     }
 }

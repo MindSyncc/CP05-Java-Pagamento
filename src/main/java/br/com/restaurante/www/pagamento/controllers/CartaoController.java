@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/cartoes")
@@ -45,5 +46,14 @@ public class CartaoController {
        } catch (CartaoException e) {
            throw new RuntimeException(e.getMessage());
        }
+    }
+
+    @GetMapping("/validacao/{id}")
+    public Map<String, Object> validarCartao(@PathVariable Long id) {
+        try {
+            return cartaoService.verificarValidade(id);
+        } catch (CartaoException e) {
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }

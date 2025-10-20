@@ -31,7 +31,7 @@ public class Cartao {
     private String cvv;
 
     @NotBlank(message = "O campo senha é obrigatório")
-    @Size(max = 6, message = "A senha deve possui 6 digitos")
+    @Size(max = 6, message = "A senha deve possuir 6 digitos")
     @Column(name = "SENHA")
     private String senha;
 

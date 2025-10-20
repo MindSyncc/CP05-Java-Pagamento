@@ -5,7 +5,11 @@ import br.com.restaurante.www.pagamento.entities.Pagamento;
 import br.com.restaurante.www.pagamento.repositories.PagamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -115,5 +119,28 @@ public class PagamentoService {
 
         Pagamento pagamentoEncontrado = pagamentoOptional.get();
         repository.delete(pagamentoEncontrado);
+    }
+
+    public Map<String, Double> calcularTotalDoDia() {
+        List<Pagamento> pagamentos = repository.findAll();
+
+        LocalDate dataAtual = LocalDate.now();
+        List<Pagamento> listaFiltrada = pagamentos
+                .stream()
+                .filter(p -> p.getDataPagamento()
+                        .toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                        .equals(dataAtual))
+                .toList();
+
+        double somaTotalDia = 0;
+        for (Pagamento pagamento: listaFiltrada) {
+            somaTotalDia += pagamento.getValor();
+        }
+
+        return Map.of(
+                "valorDoDia", somaTotalDia
+        );
     }
 }
